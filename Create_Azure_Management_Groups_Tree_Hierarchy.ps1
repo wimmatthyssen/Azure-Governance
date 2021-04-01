@@ -2,17 +2,18 @@
 
 .SYNOPSIS
 
-A script used to deploy a management group tree hierarchy
+A script used to deploy a management groups tree structure
 
 .DESCRIPTION
 
-A script used to deploy a management group tree hierarchy
+A script used to deploy a management groups tree structure based on the Enterprise-scale architecture for small enterprises.
+When all management groups are created the Azure subscriptions will be moved to the corresponding management group.
 
 .NOTES
 
-Filename:       Create_Azure_Management_Groups_Tree_Hierarchy.ps1
+Filename:       Create_Azure_Management_Groups_Tree_Structure.ps1
 Created:        31/07/2020
-Last modified:  31/07/2020
+Last modified:  31/03/2021
 Author:         Wim Matthyssen
 PowerShell:     PowerShell 5.1; Azure PowerShell
 Version:        Install latest Az modules
@@ -21,7 +22,7 @@ Disclaimer:     This script is provided "As IS" with no warranties.
 
 .EXAMPLE
 
-.\Create_Azure_Management_Groups_Tree_Hierarchy.ps1
+.\Create_Azure_Management_Groups_Tree_Structure.ps1
 
 .LINK
 
@@ -46,80 +47,89 @@ if ($IsAdministrator -eq $false) {
 
 Import-Module Az
 
+##  Suppress Breaking Change Messages
+
+Set-Item Env:\SuppressAzurePowerShellBreakingChangeWarnings "true"
+
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Variables
 
-$customerName ="wma"
-$spoke1 = "prd"
-$spoke2 = "pre"
-$spoke3 = "dev"
+$customerFullName = "myhcjourney"
+$customerName ="myh"
 
-$beManagementGroupName = "mg-" + $customerName + "-be"
-$beManagementGroupGuid = New-Guid
-$usManagementGroupName = "mg-" + $customerName + "-us"
-$usManagementGroupGuid = New-Guid
+$customerManagementGroupName = "mg-" + $customerFullName 
+$customerManagementGroupGuid = New-Guid
 
-$itBeManagementGroupName = $beManagementGroupName + "-it"
-$itBeManagementGroupGuid = New-Guid
-$itUsManagementGroupName = $usManagementGroupName + "-it"
-$itUsManagementGroupGuid = New-Guid
+$platformManagementGroupName = "mg-" + $customerName + "-platform"
+$platformManagementGroupGuid = New-Guid
+$landingZonesManagementGroupName = "mg-" + $customerName + "-landingzones"
+$landingZonesManagementGroupGuid = New-Guid
+$sandboxesManagementGroupName = "mg-" + $customerName + "-sandboxes"
+$sandboxesManagementGroupGuid = New-Guid
+$decommissionedManagementGroupName = "mg-" + $customerName + "-decommissioned"
+$decommissionedManagementGroupGuid = New-Guid
 
-$spoke1ItBeManagementGroupName = $itBeManagementGroupName + "-" + $spoke1
-$spoke1ItBeManagementGroupGuid = New-Guid
-$spoke2ItBeManagementGroupName = $itBeManagementGroupName + "-" + $spoke2
-$spoke2ItBeManagementGroupGuid = New-Guid
-$spoke3ItBeManagementGroupName = $itBeManagementGroupName + "-" + $spoke3
-$spoke3ItBeManagementGroupGuid = New-Guid
+$managemnetManagementGroupName = "mg-" + $customerName + "-management"
+$managementManagementGroupGuid = New-Guid
+$connectivityManagementGroupName = "mg-" + $customerName + "-connectivity"
+$connectivityManagementGroupGuid = New-Guid
 
-$spoke1ItUsManagementGroupName = $itUsManagementGroupName + "-" + $spoke1
-$spoke1ItUsManagementGroupGuid = New-Guid
-$spoke2ItUsManagementGroupName = $itUsManagementGroupName + "-" + $spoke2
-$spoke2ItUsManagementGroupGuid = New-Guid
-$spoke3ItUsManagementGroupName = $itUsManagementGroupName + "-" + $spoke3
-$spoke3ItUsManagementGroupGuid = New-Guid
+$corpManagementGroupName = "mg-" + $customerName + "-corp"
+$corpManagementGroupGuid = New-Guid
+$onlineManagementGroupName = "mg-" + $customerName + "-online"
+$onlineManagementGroupGuid = New-Guid
 
-$global:currentTime = Set-PSBreakpoint -Variable currentTime -Mode Read -Action {Get-Date -UFormat "%A %m/%d/%Y %R"}
-$foregroundColor1 = "Red"
 $writeEmptyLine = "`n"
 $writeSeperator = " - "
+$writeSpace = " "
+$global:currentTime= Set-PSBreakpoint -Variable currenttime -Mode Read -Action {$global:currentTime= Get-Date -UFormat "%A %m/%d/%Y %R"}
+$foregroundColor1 = "Red"
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Create country management groups
+## Create customer management group
 
-New-AzManagementGroup -GroupName $beManagementGroupGuid -DisplayName $beManagementGroupName
-New-AzManagementGroup -GroupName $usManagementGroupGuid -DisplayName $usManagementGroupName
+New-AzManagementGroup -GroupId $customerManagementGroupGuid -DisplayName $customerManagementGroupName
 
-$beParentGroup = Get-AzManagementGroup -GroupName $beManagementGroupGuid
-$usParentGroup = Get-AzManagementGroup -GroupName $usManagementGroupGuid
+$customerParentGroup = Get-AzManagementGroup -GroupId $customerManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# Country management groups created" + $writeSeperator + $currentTime) -foregroundcolor $foregroundColor1 $writeEmptyLine
-
-## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-## Create department management groups
-
-New-AzManagementGroup -GroupName $itBeManagementGroupGuid -DisplayName $itBeManagementGroupName -ParentObject $beParentGroup
-New-AzManagementGroup -GroupName $itUsManagementGroupGuid -DisplayName $itUsManagementGroupName -ParentObject $UsParentGroup
-
-$beItParentGroup = Get-AzManagementGroup -GroupName $itBeManagementGroupGuid
-$usItParentGroup = Get-AzManagementGroup -GroupName $itUsManagementGroupGuid
-
-Write-Host ($writeEmptyLine + "# Department management groups created" + $writeSeperator + $currentTime) -foregroundcolor $foregroundColor1 $writeEmptyLine
+Write-Host ($writeEmptyLine + "#" + $writeSpace + "Customer management group created" + $writeSeperator + $currentTime)`
+-foregroundcolor $foregroundColor1 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Create environment management groups
+## Create top management groups (Platform, Landing Zones, Sandboxes, Decommissioned)
 
-New-AzManagementGroup -GroupName $spoke1ItBeManagementGroupGuid -DisplayName $spoke1ItBeManagementGroupName -ParentObject $beItParentGroup
-New-AzManagementGroup -GroupName $spoke2ItBeManagementGroupGuid -DisplayName $spoke2ItBeManagementGroupName -ParentObject $beItParentGroup
-New-AzManagementGroup -GroupName $spoke3ItBeManagementGroupGuid -DisplayName $spoke3ItBeManagementGroupName -ParentObject $beItParentGroup
+New-AzManagementGroup -GroupId $platformManagementGroupGuid -DisplayName $platformManagementGroupName -ParentObject $customerParentGroup
+New-AzManagementGroup -GroupId $landingZonesManagementGroupGuid -DisplayName $landingZonesManagementGroupName -ParentObject $customerParentGroup
+New-AzManagementGroup -GroupId $sandboxesManagementGroupGuid -DisplayName $sandboxesManagementGroupName -ParentObject $customerParentGroup
+New-AzManagementGroup -GroupId $decommissionedManagementGroupGuid -DisplayName $decommissionedManagementGroupName -ParentObject $customerParentGroup
 
-New-AzManagementGroup -GroupName $spoke1ItUsManagementGroupGuid -DisplayName $spoke1ItUsManagementGroupName -ParentObject $usItParentGroup
-New-AzManagementGroup -GroupName $spoke2ItUsManagementGroupGuid -DisplayName $spoke2ItUsManagementGroupName -ParentObject $usItParentGroup
-New-AzManagementGroup -GroupName $spoke3ItUsManagementGroupGuid -DisplayName $spoke3ItUsManagementGroupName -ParentObject $usItParentGroup
+$platformParentGroup = Get-AzManagementGroup -GroupId $platformManagementGroupGuid 
+$landingZonesParentGroup = Get-AzManagementGroup -GroupId $landingZonesManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# Environment management groups created" + $writeSeperator + $currentTime) -foregroundcolor $foregroundColor1 $writeEmptyLine
+Write-Host ($writeEmptyLine + "# Top management groups created" + $writeSeperator + $currentTime)`
+-foregroundcolor $foregroundColor1 $writeEmptyLine
+
+## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Create Platform management groups
+
+New-AzManagementGroup -GroupName $managementManagementGroupGuid -DisplayName $managemnetManagementGroupName -ParentObject $platformParentGroup
+New-AzManagementGroup -GroupName $connectivityManagementGroupGuid -DisplayName $connectivityManagementGroupName -ParentObject $platformParentGroup
+
+Write-Host ($writeEmptyLine + "# Platform management groups created" + $writeSeperator + $currentTime)`
+-foregroundcolor $foregroundColor1 $writeEmptyLine
+
+## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Create Landing Zones management groups
+
+New-AzManagementGroup -GroupName $corpManagementGroupGuid -DisplayName $corpManagementGroupName -ParentObject $landingZonesParentGroup
+New-AzManagementGroup -GroupName $onlineManagementGroupGuid -DisplayName $onlineManagementGroupName -ParentObject $landingZonesParentGroup
+
+Write-Host ($writeEmptyLine + "# Landing Zones management groups created" + $writeSeperator + $currentTime)`
+-foregroundcolor $foregroundColor1 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
