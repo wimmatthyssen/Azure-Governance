@@ -31,33 +31,33 @@ https://wmatthyssen.com/2020/08/01/azure-powershell-script-create-a-management-g
 
 ## Variables
 
-$customerFullName = "myhcjourney"
-$customerShortName ="myh"
+$companyFullName = "myhcjourney" # <your company full name here> Example: "myhcjourney"
+$companyShortName ="myh" # <your company short name here> Best is to use a three letter abbreviation. Example: "myh"
 
-$customerManagementGroupName = "mg-" + $customerFullName 
-$customerManagementGroupGuid = New-Guid
+$companyManagementGroupName = "mg-" + $companyFullName 
+$companyManagementGroupGuid = New-Guid
 
-$platformManagementGroupName = "mg-" + $customerShortName + "-platform"
+$platformManagementGroupName = "mg-" + $companyShortName + "-platform"
 $platformManagementGroupGuid = New-Guid
-$landingZonesManagementGroupName = "mg-" + $customerShortName + "-landingzones"
+$landingZonesManagementGroupName = "mg-" + $companyShortName + "-landingzones"
 $landingZonesManagementGroupGuid = New-Guid
-$sandboxesManagementGroupName = "mg-" + $customerShortName + "-sandboxes"
+$sandboxesManagementGroupName = "mg-" + $companyShortName + "-sandboxes"
 $sandboxesManagementGroupGuid = New-Guid
-$decommissionedManagementGroupName = "mg-" + $customerShortName + "-decommissioned"
+$decommissionedManagementGroupName = "mg-" + $companyShortName + "-decommissioned"
 $decommissionedManagementGroupGuid = New-Guid
 
-$managementManagementGroupName = "mg-" + $customerShortName + "-management"
+$managementManagementGroupName = "mg-" + $companyShortName + "-management"
 $managementManagementGroupGuid = New-Guid
-$connectivityManagementGroupName = "mg-" + $customerShortName + "-connectivity"
+$connectivityManagementGroupName = "mg-" + $companyShortName + "-connectivity"
 $connectivityManagementGroupGuid = New-Guid
-$identityManagementGroupName = "mg-" + $customerShortName + "-identity"
+$identityManagementGroupName = "mg-" + $companyShortName + "-identity"
 $identityManagementGroupGuid = New-Guid
 
-$corpManagementGroupName = "mg-" + $customerShortName + "-corp"
+$corpManagementGroupName = "mg-" + $companyShortName + "-corp"
 $corpManagementGroupGuid = New-Guid
-$onlineManagementGroupName = "mg-" + $customerShortName + "-online"
+$onlineManagementGroupName = "mg-" + $companyShortName + "-online"
 $onlineManagementGroupGuid = New-Guid
-$sapManagementGroupName = "mg-" + $customerShortName + "-sap"
+$sapManagementGroupName = "mg-" + $companyShortName + "-sap"
 $sapManagementGroupGuid = New-Guid
 
 $global:currenttime= Set-PSBreakpoint -Variable currenttime -Mode Read -Action {$global:currenttime= Get-Date -UFormat "%A %m/%d/%Y %R"}
@@ -104,23 +104,23 @@ Write-Host ($writeEmptyLine + "# Deployment started" + $writeSeperatorSpaces + $
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Create customer (or company) management group
+## Create company (or company) management group
 
-New-AzManagementGroup -GroupId $customerManagementGroupGuid -DisplayName $customerManagementGroupName
+New-AzManagementGroup -GroupId $companyManagementGroupGuid -DisplayName $companyManagementGroupName
 
-$customerParentGroup = Get-AzManagementGroup -GroupId $customerManagementGroupGuid
+$companyParentGroup = Get-AzManagementGroup -GroupId $companyManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# Customer management group created" + $writeSeperator + $currentTime)`
+Write-Host ($writeEmptyLine + "# company management group created" + $writeSeperator + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Create top management groups (Platform, Landing Zones, Sandboxes, Decommissioned)
 
-New-AzManagementGroup -GroupId $platformManagementGroupGuid -DisplayName $platformManagementGroupName -ParentObject $customerParentGroup
-New-AzManagementGroup -GroupId $landingZonesManagementGroupGuid -DisplayName $landingZonesManagementGroupName -ParentObject $customerParentGroup
-New-AzManagementGroup -GroupId $sandboxesManagementGroupGuid -DisplayName $sandboxesManagementGroupName -ParentObject $customerParentGroup
-New-AzManagementGroup -GroupId $decommissionedManagementGroupGuid -DisplayName $decommissionedManagementGroupName -ParentObject $customerParentGroup
+New-AzManagementGroup -GroupId $platformManagementGroupGuid -DisplayName $platformManagementGroupName -ParentObject $companyParentGroup
+New-AzManagementGroup -GroupId $landingZonesManagementGroupGuid -DisplayName $landingZonesManagementGroupName -ParentObject $companyParentGroup
+New-AzManagementGroup -GroupId $sandboxesManagementGroupGuid -DisplayName $sandboxesManagementGroupName -ParentObject $companyParentGroup
+New-AzManagementGroup -GroupId $decommissionedManagementGroupGuid -DisplayName $decommissionedManagementGroupName -ParentObject $companyParentGroup
 
 $platformParentGroup = Get-AzManagementGroup -GroupId $platformManagementGroupGuid 
 $landingZonesParentGroup = Get-AzManagementGroup -GroupId $landingZonesManagementGroupGuid
