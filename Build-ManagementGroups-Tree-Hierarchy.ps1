@@ -5,7 +5,7 @@ A script used to build a management groups tree structure
 
 .DESCRIPTION
 
-A script used to deploy a management groups tree structure based on the Enterprise-scale architecture with hub and spoke architecture.
+A script used to build a management groups tree structure based on the Enterprise-scale architecture with hub and spoke architecture.
 
 .NOTES
 
