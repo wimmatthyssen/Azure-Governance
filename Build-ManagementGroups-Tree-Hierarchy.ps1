@@ -11,7 +11,7 @@ A script used to build a management groups tree structure based on the Enterpris
 
 Filename:       Build-ManagementGroups-Tree-Hierarchy.ps1
 Created:        31/07/2020
-Last modified:  20/06/2021
+Last modified:  29/06/2021
 Author:         Wim Matthyssen
 PowerShell:     Azure Cloud Shell or Azure PowerShell
 Version:        Install latest Azure Powershell modules
@@ -64,7 +64,6 @@ $global:currenttime= Set-PSBreakpoint -Variable currenttime -Mode Read -Action {
 $foregroundColor1 = "Red"
 $foregroundColor2 = "Yellow"
 $writeEmptyLine = "`n"
-$writeSeperator = "-"
 $writeSeperatorSpaces = " - "
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -110,7 +109,7 @@ New-AzManagementGroup -GroupId $companyManagementGroupGuid -DisplayName $company
 
 $companyParentGroup = Get-AzManagementGroup -GroupId $companyManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# company management group created" + $writeSeperatorSpaces + $currentTime)`
+Write-Host ($writeEmptyLine + "# Company management group created" + $writeSeperatorSpaces + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,3 +150,10 @@ Write-Host ($writeEmptyLine + "# Landing Zones management groups created" + $wri
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Deployment completed
+
+Write-Host ($writeEmptyLine + "# Deployment completed" + $writeSeperatorSpaces + $currentTime)`
+-foregroundcolor $foregroundColor1 $writeEmptyLine
+
+## --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
