@@ -110,7 +110,7 @@ New-AzManagementGroup -GroupId $companyManagementGroupGuid -DisplayName $company
 
 $companyParentGroup = Get-AzManagementGroup -GroupId $companyManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# company management group created" + $writeSeperator + $currentTime)`
+Write-Host ($writeEmptyLine + "# company management group created" + $writeSeperatorSpaces + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ New-AzManagementGroup -GroupId $decommissionedManagementGroupGuid -DisplayName $
 $platformParentGroup = Get-AzManagementGroup -GroupId $platformManagementGroupGuid 
 $landingZonesParentGroup = Get-AzManagementGroup -GroupId $landingZonesManagementGroupGuid
 
-Write-Host ($writeEmptyLine + "# Top management groups created" + $writeSeperator + $currentTime)`
+Write-Host ($writeEmptyLine + "# Top management groups created" + $writeSeperatorSpaces + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ New-AzManagementGroup -GroupName $managementManagementGroupGuid -DisplayName $ma
 New-AzManagementGroup -GroupName $connectivityManagementGroupGuid -DisplayName $connectivityManagementGroupName -ParentObject $platformParentGroup
 New-AzManagementGroup -GroupName $identityManagementGroupGuid -DisplayName $identityManagementGroupName -ParentObject $platformParentGroup
 
-Write-Host ($writeEmptyLine + "# Platform management groups created" + $writeSeperator + $currentTime)`
+Write-Host ($writeEmptyLine + "# Platform management groups created" + $writeSeperatorSpaces + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ New-AzManagementGroup -GroupName $corpManagementGroupGuid -DisplayName $corpMana
 New-AzManagementGroup -GroupName $onlineManagementGroupGuid -DisplayName $onlineManagementGroupName -ParentObject $landingZonesParentGroup
 New-AzManagementGroup -GroupName $sapManagementGroupGuid -DisplayName $sapManagementGroupName -ParentObject $landingZonesParentGroup
 
-Write-Host ($writeEmptyLine + "# Landing Zones management groups created" + $writeSeperator + $currentTime)`
+Write-Host ($writeEmptyLine + "# Landing Zones management groups created" + $writeSeperatorSpaces + $currentTime)`
 -foregroundcolor $foregroundColor2 $writeEmptyLine
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
