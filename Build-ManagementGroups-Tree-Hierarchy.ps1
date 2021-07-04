@@ -31,8 +31,8 @@ https://wmatthyssen.com/2020/08/01/azure-powershell-script-create-a-management-g
 
 ## Variables
 
-$companyFullName = "myhcjourney" # <your company full name here> Example: "myhcjourney"
-$companyShortName ="myh" # <your company short name here> Best is to use a three letter abbreviation. Example: "myh"
+$companyFullName = "<companyFullName>" # <your company full name here> Example: "myhcjourney"
+$companyShortName ="<companyShortName>" # <your company short name here> Best is to use a three letter abbreviation. Example: "myh"
 
 $companyManagementGroupName = "mg-" + $companyFullName 
 $companyManagementGroupGuid = New-Guid
